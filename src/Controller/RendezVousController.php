@@ -48,18 +48,26 @@ class RendezVousController extends AbstractController{
         }
 
         $re = json_decode($request->getContent(),true);
-
+        
         $newrv = new RendezVous();
+        
         $newrv->setDate(new \DateTime($re['date']));
+        
         $newrv->setHeur($re['heur']);
         $newrv->setUser($this->getUser());
-        $newrv->setStructureSante($repoStruct->find($re['structureSante']));
+
+        $st = $repoStruct->find(intval($re['structureSante']));
+        // return $this->json([
+        //     'message' => 'Succes',
+        //     'data' => $st
+        // ]);
+        $newrv->setStructureSante($st);
         $em->persist($newrv);
         $em->flush();
         
         return $this->json([
             'message' => 'Succes',
-            'data' => $newrv
+            'data' => $re
         ]);
 
     }
